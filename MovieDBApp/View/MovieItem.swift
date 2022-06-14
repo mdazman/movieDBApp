@@ -17,14 +17,21 @@ struct MovieItem: View {
     let titleHeight = 100.0
     let corner = 15.0
     
+    //Title Resize
+    let minScaleFactor =  0.4
+    let maxLineNumber = 2
+    
     var body: some View {
         VStack {
             WebImage(url: URL(string: movie.posterPath ?? ""))
                 .resizable()
                 .placeholder {
-                    Image(uiImage: UIImage(named: "default.jpeg")!)
-                        .resizable()
-                        .frame(width: width, height: height)
+                        if let image = UIImage(named: "default.jpeg")
+                        {
+                            Image(uiImage: image)
+                                .resizable()
+                                .frame(width: width, height: height)
+                        }
                     }
                 .frame(width:width, height: height)
                 .cornerRadius(corner)
@@ -32,7 +39,10 @@ struct MovieItem: View {
             Text(movie.title ?? "")
                 .font(.title)
                 .fontWeight(.bold)
+                .foregroundColor(Color.black)
                 .multilineTextAlignment(.center)
+                .minimumScaleFactor(minScaleFactor)
+                .lineLimit(maxLineNumber)
         }
         .frame(width: width, height: height + titleHeight, alignment: .top)
     }
@@ -40,6 +50,6 @@ struct MovieItem: View {
 
 struct MovieItem_Previews: PreviewProvider {
     static var previews: some View {
-        MovieItem(movie: Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg"))
+        MovieItem(movie: Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: ""))
     }
 }

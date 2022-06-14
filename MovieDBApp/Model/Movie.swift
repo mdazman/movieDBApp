@@ -14,4 +14,5 @@ struct Movie: Identifiable {
     let voteAverage: Float?
     let overview: String?
     let posterPath: String?
+    let backdropPath: String?
 }
