@@ -7,7 +7,12 @@
 
 import Foundation
 
-struct Movie: Identifiable {
+struct MovieResponse: Codable {
+    let totalPages: Int?
+    let results: [Movie]?
+}
+
+struct Movie: Identifiable, Codable {
     let id: Int?
     let title: String?
     let releaseDate: String?
@@ -15,4 +20,18 @@ struct Movie: Identifiable {
     let overview: String?
     let posterPath: String?
     let backdropPath: String?
+    
+    func getFullPosterPath() -> String {
+        guard let path = posterPath else {
+            return ""
+        }
+        return "https://image.tmdb.org/t/p/w200"+path
+    }
+    
+    func getFullBackdropPath() -> String {
+        guard let path = backdropPath else {
+            return ""
+        }
+        return "https://image.tmdb.org/t/p/w400"+path
+    }
 }

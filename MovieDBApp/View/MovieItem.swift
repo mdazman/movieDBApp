@@ -9,7 +9,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct MovieItem: View {
-    let movie: Movie
+    let movie: Movie?
     
     //Image dimension
     let width = 200.0
@@ -23,7 +23,8 @@ struct MovieItem: View {
     
     var body: some View {
         VStack {
-            WebImage(url: URL(string: movie.posterPath ?? ""))
+            
+            WebImage(url: URL(string: movie?.getFullPosterPath() ?? ""))
                 .resizable()
                 .placeholder {
                         if let image = UIImage(named: "default.jpeg")
@@ -36,7 +37,7 @@ struct MovieItem: View {
                 .frame(width:width, height: height)
                 .cornerRadius(corner)
             
-            Text(movie.title ?? "")
+            Text(movie?.title ?? "")
                 .font(.title)
                 .fontWeight(.bold)
                 .foregroundColor(Color.black)

@@ -9,14 +9,14 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct MovieInfoView: View {
-    let movie: Movie
+    let movie: Movie?
     
     let verticalSpace = 10.0
     let leftMargin = 10.0
     
     var body: some View {
         VStack (alignment: .leading, spacing: verticalSpace){
-            WebImage(url: URL(string: movie.backdropPath ?? ""))
+            WebImage(url: URL(string: movie?.getFullBackdropPath() ?? ""))
                 .resizable()
                 .placeholder {
                     if let image = UIImage(named: "default_H.jpg")
@@ -29,14 +29,14 @@ struct MovieInfoView: View {
             .scaledToFit()
             
             Group {
-                Text("Title: \(movie.title ?? "")")
+                Text("Title: \(movie?.title ?? "")")
                     .font(.title)
                     .fontWeight(.bold)
                 
-                Text("Release Date: \(movie.releaseDate ?? "")")
+                Text("Release Date: \(movie?.releaseDate ?? "")")
                     .font(.title3)
                 
-                Text("Rating: \(movie.voteAverage ?? 0, specifier: "%.1f")")
+                Text("Rating: \(movie?.voteAverage ?? 0, specifier: "%.1f")")
                     .font(.title3)
                 
                 Text("Summary:")
@@ -44,7 +44,7 @@ struct MovieInfoView: View {
                 
                 ScrollView {
                     VStack {
-                        Text(movie.overview ?? "")
+                        Text(movie?.overview ?? "")
                     }
                     .padding(.trailing, leftMargin)
                 }

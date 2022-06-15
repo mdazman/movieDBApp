@@ -9,7 +9,8 @@ import SwiftUI
 
 struct MovieType: View {
     var typeHeaderName: String
-    var movieArray: [Movie]
+    var movieArray: [Movie] = [Movie]()
+    let loadMorePage: ()->Void
     
     //Image dimension
     let width = 200.0
@@ -24,10 +25,16 @@ struct MovieType: View {
                 .font(.largeTitle)
             
             ScrollView(.horizontal){
-                HStack (spacing:hSpace) {
+                LazyHStack (spacing:hSpace) {
                     ForEach(movieArray){ movie in
                         NavigationLink(destination: MovieInfoView(movie: movie)) {
                             MovieItem(movie: movie)
+                        }
+                        .onAppear {
+                            if movieArray.firstIndex(where: {$0.id == movie.id}) == movieArray.endIndex-1
+                            {
+                                self.loadMorePage()
+                            }
                         }
                     }
                 }
@@ -41,6 +48,6 @@ struct MovieType: View {
 struct MovieType_Previews: PreviewProvider {
     static var previews: some View {
         MovieType(typeHeaderName: "Popular Movies",
-        movieArray: [Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: ""), Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: "")])
+                  movieArray: [Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: ""), Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: "")], loadMorePage: {})
     }
 }
