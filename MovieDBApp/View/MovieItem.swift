@@ -27,6 +27,17 @@ struct MovieItem: View {
             WebImage(url: URL(string: movie?.getFullPosterPath() ?? ""))
                 .resizable()
                 .placeholder {
+                    if let data = movie?.posterData
+                    {
+                        if let image = UIImage(data: data)
+                        {
+                            Image(uiImage: image)
+                                .resizable()
+                                .frame(width: width, height: height)
+                        }
+                    }
+                    else
+                    {
                         if let image = UIImage(named: "default.jpeg")
                         {
                             Image(uiImage: image)
@@ -34,13 +45,13 @@ struct MovieItem: View {
                                 .frame(width: width, height: height)
                         }
                     }
+                }
                 .frame(width:width, height: height)
                 .cornerRadius(corner)
             
             Text(movie?.title ?? "")
                 .font(.title)
                 .fontWeight(.bold)
-                .foregroundColor(Color.black)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(minScaleFactor)
                 .lineLimit(maxLineNumber)
@@ -51,6 +62,6 @@ struct MovieItem: View {
 
 struct MovieItem_Previews: PreviewProvider {
     static var previews: some View {
-        MovieItem(movie: Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: ""))
+        MovieItem(movie: Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: "", posterData: nil, backdropData: nil))
     }
 }

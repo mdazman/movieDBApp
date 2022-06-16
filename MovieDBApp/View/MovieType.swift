@@ -30,6 +30,7 @@ struct MovieType: View {
                         NavigationLink(destination: MovieInfoView(movie: movie)) {
                             MovieItem(movie: movie)
                         }
+                        .buttonStyle(.plain)
                         .onAppear {
                             if movieArray.firstIndex(where: {$0.id == movie.id}) == movieArray.endIndex-1
                             {
@@ -48,6 +49,6 @@ struct MovieType: View {
 struct MovieType_Previews: PreviewProvider {
     static var previews: some View {
         MovieType(typeHeaderName: "Popular Movies",
-                  movieArray: [Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: ""), Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: "")], loadMorePage: {})
+                  movieArray: [Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: "", posterData: nil, backdropData: nil), Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: "", posterData: nil, backdropData: nil)], loadMorePage: {})
     }
 }

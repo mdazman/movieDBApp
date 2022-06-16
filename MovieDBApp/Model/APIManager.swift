@@ -12,7 +12,7 @@ class APIManager
     private let API_KEY = "00e6c89818e5207b6f7be33c9961cc27"
     
     static let shared = APIManager()
-    private var popularPage = 501
+    private var popularPage = 1
     private var upcomingPage = 1
     
     enum APIerror : Error {
@@ -31,6 +31,10 @@ class APIManager
         
         let task = URLSession.shared.dataTask(with: URL(string: encodedString)!, completionHandler: { (data, response, error) in
             
+            //Test Error load
+//            completionHandler(.failure(APIerror.failedRequest))
+//            return
+//
             guard let data = data, error == nil else {
                 completionHandler(.failure(APIerror.failedRequest))
                 return
@@ -76,6 +80,9 @@ class APIManager
         }
         
         let task = URLSession.shared.dataTask(with: URL(string: encodedString)!, completionHandler: { (data, response, error) in
+            //Test Error load
+//            completionHandler(.failure(APIerror.failedRequest))
+//            return
             
             guard let data = data, error == nil else {
                 completionHandler(.failure(APIerror.failedRequest))
@@ -110,5 +117,10 @@ class APIManager
             
         })
         task.resume()
+    }
+    
+    func downloadImageData(from url: String, completion: @escaping (Data?, URLResponse?, Error?) -> ())
+    {
+        URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: completion).resume()
     }
 }

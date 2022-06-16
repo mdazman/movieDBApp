@@ -9,25 +9,6 @@ import CoreData
 
 struct PersistenceController {
     static let shared = PersistenceController()
-
-    static var preview: PersistenceController = {
-        let result = PersistenceController(inMemory: true)
-        let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
-        do {
-            try viewContext.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        return result
-    }()
-
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
@@ -48,9 +29,118 @@ struct PersistenceController {
                  * The store could not be migrated to the current model version.
                  Check the error message to determine what the actual problem was.
                  */
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+//                fatalError("Unresolved error \(error), \(error.userInfo)")
+                print("Could not load. \(error), \(error.userInfo)")
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+    
+    func retrieveData(type:String ,completion: ([MovieData]) -> ())
+    {
+        print("retrieveData: \(type)")
+        
+        // Create a fetch request for a NamedEntity
+        let fetchRequest: NSFetchRequest<MovieData>
+        fetchRequest = MovieData.fetchRequest()
+        
+        fetchRequest.predicate = NSPredicate(
+            format: "type LIKE %@", type
+        )
+
+        // Get a reference to a NSManagedObjectContext
+        let context = container.viewContext
+
+        var objects: [MovieData] = []
+        
+        do {
+            objects = try context.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            //Return empty
+            completion(objects)
+            return
+        }
+        
+        completion(objects)
+    }
+    
+    func deleteData(popular isPopular:Bool)
+    {
+        let context = container.viewContext
+        
+        var type = "popular"
+        
+        if !isPopular
+        {
+            type = "upcoming"
+        }
+        
+        self.retrieveData (type:type){ objects in
+            for object in objects {
+                context.delete(object)
+            }
+        }
+        
+        do {
+            try context.save()
+          } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+          }
+    }
+    
+    func saveImage(movie:Movie, data:Data, imageType:String)
+    {
+        let fetchRequest: NSFetchRequest<MovieData>
+        fetchRequest = MovieData.fetchRequest()
+        
+        fetchRequest.predicate = NSPredicate(
+            format: "id LIKE %@", String(movie.id ?? 0)
+        )
+
+        // Get a reference to a NSManagedObjectContext
+        let context = container.viewContext
+        
+        var objects: [MovieData] = []
+        
+        do {
+            objects = try context.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return
+        }
+        
+        for object in objects {
+            object.setValue(data, forKey: imageType)
+        }
+        
+        do {
+            try context.save()
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+    }
+    
+    func saveData(_ movieArray:[Movie], type:String)
+    {
+        let context = container.viewContext
+        
+        for movie in movieArray
+        {
+            let entity = NSEntityDescription.entity(forEntityName: "MovieData", in: context)!
+            let movieData = NSManagedObject(entity: entity, insertInto: context)
+            movieData.setValue(movie.id, forKeyPath: "id")
+            movieData.setValue(movie.title, forKeyPath: "title")
+            movieData.setValue(movie.releaseDate, forKeyPath: "releaseDate")
+            movieData.setValue(movie.voteAverage, forKeyPath: "voteAverage")
+            movieData.setValue(movie.overview, forKeyPath: "overview")
+            movieData.setValue(type, forKeyPath: "type")
+        }
+        
+        do {
+            try context.save()
+          } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+          }
     }
 }

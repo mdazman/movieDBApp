@@ -19,14 +19,26 @@ struct MovieInfoView: View {
             WebImage(url: URL(string: movie?.getFullBackdropPath() ?? ""))
                 .resizable()
                 .placeholder {
-                    if let image = UIImage(named: "default_H.jpg")
+                    if let data = movie?.backdropData
                     {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
+                        if let image = UIImage(data: data)
+                        {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
                         }
                     }
-            .scaledToFit()
+                    else
+                    {
+                        if let image = UIImage(named: "default_H.jpg")
+                        {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                        }
+                    }
+                }
+                .scaledToFit()
             
             Group {
                 Text("Title: \(movie?.title ?? "")")
@@ -58,6 +70,6 @@ struct MovieInfoView: View {
 
 struct MovieInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        MovieInfoView(movie: Movie(id: 0, title: "Harry Potter and sdsds sdsd sdsd sdsd ", releaseDate: "01-06-2022", voteAverage: 7.0, overview: "Professor Albus Dumbledore knows the powerful, dark wizard Gellert Grindelwald is moving to seize control of the wizarding world. Unable to stop him alone, he entrusts magizoologist Newt Scamander to lead an intrepid team of wizards and witches. They soon encounter an array of old and new beasts as they clash with Grindelwald's growing legion of followers.", posterPath: "", backdropPath: "https://image.tmdb.org/t/p/w400/zGLHX92Gk96O1DJvLil7ObJTbaL.jpg"))
+        MovieInfoView(movie: Movie(id: 0, title: "Harry Potter and the Hunger Games", releaseDate: "01-06-2022", voteAverage: 7.0, overview: "Professor Albus Dumbledore knows the powerful, dark wizard Gellert Grindelwald is moving to seize control of the wizarding world. Unable to stop him alone, he entrusts magizoologist Newt Scamander to lead an intrepid team of wizards and witches. They soon encounter an array of old and new beasts as they clash with Grindelwald's growing legion of followers.", posterPath: "", backdropPath: "https://image.tmdb.org/t/p/w400/zGLHX92Gk96O1DJvLil7ObJTbaL.jpg", posterData: nil, backdropData: nil))
     }
 }

@@ -21,6 +21,9 @@ struct Movie: Identifiable, Codable {
     let posterPath: String?
     let backdropPath: String?
     
+    var posterData: Data?
+    var backdropData: Data?
+    
     func getFullPosterPath() -> String {
         guard let path = posterPath else {
             return ""
