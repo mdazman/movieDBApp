@@ -14,6 +14,8 @@ struct MovieInfoView: View {
     let verticalSpace = 10.0
     let leftMargin = 10.0
     
+    @State var isFav = false
+    
     var body: some View {
         VStack (alignment: .leading, spacing: verticalSpace){
             WebImage(url: URL(string: movie?.getFullBackdropPath() ?? ""))
@@ -65,6 +67,14 @@ struct MovieInfoView: View {
             .padding(.leading, leftMargin)
         }
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            Button {
+                isFav.toggle()
+//                favVM.toggleFavourites(movie: movie, isSet: isSet)
+            } label: {
+                Label("Toggle Favorite", systemImage: isFav ? "star.fill" : "star")
+            }
+        }
     }
 }
 

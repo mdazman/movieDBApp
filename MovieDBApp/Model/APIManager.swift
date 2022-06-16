@@ -34,7 +34,7 @@ class APIManager
             //Test Error load
 //            completionHandler(.failure(APIerror.failedRequest))
 //            return
-//
+
             guard let data = data, error == nil else {
                 completionHandler(.failure(APIerror.failedRequest))
                 return
@@ -52,6 +52,7 @@ class APIManager
             }
             
             guard let json = movieResponse else {
+                completionHandler(.failure(APIerror.failedRequest))
                 return
             }
             
@@ -101,6 +102,7 @@ class APIManager
             }
             
             guard let json = movieResponse else {
+                completionHandler(.failure(APIerror.failedRequest))
                 return
             }
             

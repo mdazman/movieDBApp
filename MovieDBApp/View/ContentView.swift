@@ -9,9 +9,29 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
+    enum TabType {
+        case movie
+        case favourite
+    }
+    
+    @State private var current: TabType = .movie
  
     var body: some View {
-        MainMovieView()
+        TabView(selection: $current) {
+            MainMovieView()
+                .tag(TabType.movie)
+                .tabItem {
+                    Label("Movies", systemImage: "film")
+                }
+            
+            FavouriteView()
+                .tag(TabType.favourite)
+                .tabItem {
+                    Label("Favourites", systemImage: "star.fill")
+                }
+        }
+        
+        
     }
 }
 

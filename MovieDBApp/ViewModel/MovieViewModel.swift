@@ -62,11 +62,6 @@ class MovieViewModel: ObservableObject {
                             self.upcomingMovies.append(movie)
                         }
                     }
-                    //Save only the first pull
-                    if self.isSaveUpcomingOnce {
-                        self.isSaveUpcomingOnce = false
-                        self.saveLocalData(isPopular: false)
-                    }
                 }
                     break
                 case .failure(let error): //Check for local data later
@@ -110,7 +105,7 @@ class MovieViewModel: ObservableObject {
         }
         
         //Delete
-        PersistenceController.shared.deleteData(popular: isPopular)
+//        PersistenceController.shared.deleteData(popular: isPopular)
         
         //Save
         var dataSaveArray = [Movie]()
@@ -121,30 +116,56 @@ class MovieViewModel: ObservableObject {
         
         PersistenceController.shared.saveData(dataSaveArray, type: type)
         
-        savePosterImage(movieArray)
-        saveBackdropImage(movieArray)
+        savePosterImage(movieArray, type: type)
     }
     
-    func savePosterImage(_ movieArray:[Movie])
+    func savePosterImage(_ movieArray:[Movie], type:String)
     {
+        let group = DispatchGroup()
+        var tempArray:[(movie:Movie, data:Data)] = []
+        
         for movie in movieArray {
+            group.enter()
             APIManager.shared.downloadImageData(from: movie.getFullPosterPath()) { data, response, error in
                 guard let data = data, error == nil else { return }
-                print("Poster IMAGE: \(data)")
 
-                PersistenceController.shared.saveImage(movie: movie, data: data, imageType: "posterData")
+                let item = (movie:movie, data:data)
+                tempArray.append(item)
+                group.leave()
             }
         }
+        
+        group.notify(queue: .global()) {
+            PersistenceController.shared.saveImage(movieArray: tempArray, type: type, imageType: "posterData")
+            self.saveBackdropImage(movieArray, type: type)
+        }
+        
+        
     }
     
-    func saveBackdropImage(_ movieArray:[Movie])
+    func saveBackdropImage(_ movieArray:[Movie], type:String)
     {
+        let group = DispatchGroup()
+        var tempArray:[(movie:Movie, data:Data)] = []
+        
         for movie in movieArray {
+            group.enter()
             APIManager.shared.downloadImageData(from: movie.getFullBackdropPath()) { data, response, error in
                 guard let data = data, error == nil else { return }
-                print("Backdrop IMAGE: \(data)")
 
-                PersistenceController.shared.saveImage(movie: movie, data: data, imageType: "backdropData")
+                let item = (movie:movie, data:data)
+                tempArray.append(item)
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .global()) {
+            PersistenceController.shared.saveImage(movieArray: tempArray, type: type, imageType: "backdropData")
+            
+            //Save only the first pull
+            if self.isSaveUpcomingOnce {
+                self.isSaveUpcomingOnce = false
+                self.saveLocalData(isPopular: false)
             }
         }
     }

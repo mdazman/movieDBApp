@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		639A1572285B35CC0070B5D7 /* FavouriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639A1571285B35CC0070B5D7 /* FavouriteView.swift */; };
 		63AA859A28587BCC000EB277 /* MainMovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AA859928587BCC000EB277 /* MainMovieView.swift */; };
 		63AA859C28588BF2000EB277 /* default_H.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 63AA859B28588BF2000EB277 /* default_H.jpg */; };
 		63AA859E28588D82000EB277 /* MovieInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AA859D28588D82000EB277 /* MovieInfoView.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		639A1571285B35CC0070B5D7 /* FavouriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteView.swift; sourceTree = "<group>"; };
 		63AA859928587BCC000EB277 /* MainMovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMovieView.swift; sourceTree = "<group>"; };
 		63AA859B28588BF2000EB277 /* default_H.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = default_H.jpg; sourceTree = "<group>"; };
 		63AA859D28588D82000EB277 /* MovieInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieInfoView.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				63B98CF12858553C0095E819 /* MovieItem.swift */,
 				63AA859928587BCC000EB277 /* MainMovieView.swift */,
 				63AA859D28588D82000EB277 /* MovieInfoView.swift */,
+				639A1571285B35CC0070B5D7 /* FavouriteView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 				63AA859E28588D82000EB277 /* MovieInfoView.swift in Sources */,
 				63AA85A22859912A000EB277 /* MovieViewModel.swift in Sources */,
 				63AA859A28587BCC000EB277 /* MainMovieView.swift in Sources */,
+				639A1572285B35CC0070B5D7 /* FavouriteView.swift in Sources */,
 				63B98CF9285868600095E819 /* MovieType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

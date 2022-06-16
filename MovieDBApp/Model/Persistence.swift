@@ -38,8 +38,6 @@ struct PersistenceController {
     
     func retrieveData(type:String ,completion: ([MovieData]) -> ())
     {
-        print("retrieveData: \(type)")
-        
         // Create a fetch request for a NamedEntity
         let fetchRequest: NSFetchRequest<MovieData>
         fetchRequest = MovieData.fetchRequest()
@@ -89,13 +87,13 @@ struct PersistenceController {
           }
     }
     
-    func saveImage(movie:Movie, data:Data, imageType:String)
+    func saveImage(movieArray:[(movie:Movie, data:Data)], type:String, imageType:String)
     {
         let fetchRequest: NSFetchRequest<MovieData>
         fetchRequest = MovieData.fetchRequest()
         
         fetchRequest.predicate = NSPredicate(
-            format: "id LIKE %@", String(movie.id ?? 0)
+            format: "type LIKE %@", type
         )
 
         // Get a reference to a NSManagedObjectContext
@@ -110,10 +108,14 @@ struct PersistenceController {
             return
         }
         
-        for object in objects {
-            object.setValue(data, forKey: imageType)
+        for item in movieArray {
+            for object in objects {
+                if (Int(object.id) == item.movie.id) {
+                    object.setValue(item.data, forKey: imageType)
+                }
+            }
         }
-        
+                
         do {
             try context.save()
         } catch let error as NSError {
@@ -125,16 +127,21 @@ struct PersistenceController {
     {
         let context = container.viewContext
         
-        for movie in movieArray
-        {
-            let entity = NSEntityDescription.entity(forEntityName: "MovieData", in: context)!
-            let movieData = NSManagedObject(entity: entity, insertInto: context)
-            movieData.setValue(movie.id, forKeyPath: "id")
-            movieData.setValue(movie.title, forKeyPath: "title")
-            movieData.setValue(movie.releaseDate, forKeyPath: "releaseDate")
-            movieData.setValue(movie.voteAverage, forKeyPath: "voteAverage")
-            movieData.setValue(movie.overview, forKeyPath: "overview")
-            movieData.setValue(type, forKeyPath: "type")
+        self.retrieveData (type:type){ objects in
+            
+            for movie in movieArray {
+                if objects.firstIndex(where: { $0.id == movie.id ?? 0}) == nil {
+                    let entity = NSEntityDescription.entity(forEntityName: "MovieData", in: context)!
+                    let movieData = NSManagedObject(entity: entity, insertInto: context)
+                    movieData.setValue(movie.id, forKeyPath: "id")
+                    movieData.setValue(movie.title, forKeyPath: "title")
+                    movieData.setValue(movie.releaseDate, forKeyPath: "releaseDate")
+                    movieData.setValue(movie.voteAverage, forKeyPath: "voteAverage")
+                    movieData.setValue(movie.overview, forKeyPath: "overview")
+                    movieData.setValue(type, forKeyPath: "type")
+                }
+            }
+            
         }
         
         do {
