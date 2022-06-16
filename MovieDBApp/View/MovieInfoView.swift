@@ -9,19 +9,19 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct MovieInfoView: View {
-    let movie: Movie?
+    @EnvironmentObject var favouriteViewModel: FavouriteViewModel
+    
+    let movie: Movie
     
     let verticalSpace = 10.0
     let leftMargin = 10.0
     
-    @State var isFav = false
-    
     var body: some View {
         VStack (alignment: .leading, spacing: verticalSpace){
-            WebImage(url: URL(string: movie?.getFullBackdropPath() ?? ""))
+            WebImage(url: URL(string: movie.getFullBackdropPath()))
                 .resizable()
                 .placeholder {
-                    if let data = movie?.backdropData
+                    if let data = movie.backdropData
                     {
                         if let image = UIImage(data: data)
                         {
@@ -43,14 +43,14 @@ struct MovieInfoView: View {
                 .scaledToFit()
             
             Group {
-                Text("Title: \(movie?.title ?? "")")
+                Text("Title: \(movie.title ?? "")")
                     .font(.title)
                     .fontWeight(.bold)
                 
-                Text("Release Date: \(movie?.releaseDate ?? "")")
+                Text("Release Date: \(movie.releaseDate ?? "")")
                     .font(.title3)
                 
-                Text("Rating: \(movie?.voteAverage ?? 0, specifier: "%.1f")")
+                Text("Rating: \(movie.voteAverage ?? 0, specifier: "%.1f")")
                     .font(.title3)
                 
                 Text("Summary:")
@@ -58,7 +58,7 @@ struct MovieInfoView: View {
                 
                 ScrollView {
                     VStack {
-                        Text(movie?.overview ?? "")
+                        Text(movie.overview ?? "")
                     }
                     .padding(.trailing, leftMargin)
                 }
@@ -68,12 +68,7 @@ struct MovieInfoView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            Button {
-                isFav.toggle()
-//                favVM.toggleFavourites(movie: movie, isSet: isSet)
-            } label: {
-                Label("Toggle Favorite", systemImage: isFav ? "star.fill" : "star")
-            }
+            FavouriteButton(movie: movie, isFav: favouriteViewModel.check(movie: movie))
         }
     }
 }
@@ -81,5 +76,21 @@ struct MovieInfoView: View {
 struct MovieInfoView_Previews: PreviewProvider {
     static var previews: some View {
         MovieInfoView(movie: Movie(id: 0, title: "Harry Potter and the Hunger Games", releaseDate: "01-06-2022", voteAverage: 7.0, overview: "Professor Albus Dumbledore knows the powerful, dark wizard Gellert Grindelwald is moving to seize control of the wizarding world. Unable to stop him alone, he entrusts magizoologist Newt Scamander to lead an intrepid team of wizards and witches. They soon encounter an array of old and new beasts as they clash with Grindelwald's growing legion of followers.", posterPath: "", backdropPath: "https://image.tmdb.org/t/p/w400/zGLHX92Gk96O1DJvLil7ObJTbaL.jpg", posterData: nil, backdropData: nil))
+    }
+}
+
+struct FavouriteButton: View {
+    @EnvironmentObject var favouriteViewModel: FavouriteViewModel
+    
+    let movie: Movie
+    @State var isFav: Bool
+    
+    var body: some View {
+        Button {
+            isFav.toggle()
+            favouriteViewModel.change(isFav: isFav, movie: movie)
+        } label: {
+            Label("Toggle Favorite", systemImage: isFav ? "star.fill" : "star")
+        }
     }
 }

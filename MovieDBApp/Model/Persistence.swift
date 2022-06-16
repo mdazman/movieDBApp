@@ -149,5 +149,30 @@ struct PersistenceController {
           } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
           }
+        
+        
+    }
+    
+    func addFavourite(movie:Movie, completion: () -> ())
+    {
+        // Get a reference to a NSManagedObjectContext
+        let context = container.viewContext
+
+        let entity = NSEntityDescription.entity(forEntityName: "MovieData", in: context)!
+        let movieData = NSManagedObject(entity: entity, insertInto: context)
+        movieData.setValue(movie.id, forKeyPath: "id")
+        movieData.setValue(movie.title, forKeyPath: "title")
+        movieData.setValue(movie.releaseDate, forKeyPath: "releaseDate")
+        movieData.setValue(movie.voteAverage, forKeyPath: "voteAverage")
+        movieData.setValue(movie.overview, forKeyPath: "overview")
+        movieData.setValue("favourite", forKeyPath: "type")
+        
+        do {
+            try context.save()
+          } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+          }
+        
+        completion()
     }
 }

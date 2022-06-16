@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct FavouriteView: View {
+    @EnvironmentObject var favouriteViewModel: FavouriteViewModel
+    
     var body: some View {
-//        Text("Favourite Time")
         
         NavigationView {
             Form {
                 Section {
                     MovieType(typeHeaderName: "Favourite",
-                              movieArray: [Movie(id: 0, title: "Title", releaseDate: "", voteAverage: 0, overview: "", posterPath: "https://image.tmdb.org/t/p/w200/jrgifaYeUtTnaH7NF5Drkgjg2MB.jpg", backdropPath: "", posterData: nil, backdropData: nil)]) {}
+                              movieArray: favouriteViewModel.favouriteMovies) {}
                 }
             }
             .navigationTitle("MovieDBApp")
